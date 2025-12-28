@@ -1,0 +1,12 @@
+const v = new Validator();
+
+// Тест базового возраста
+const ageSchema = v.age();
+console.log(ageSchema.isValid(25));      // true
+console.log(ageSchema.isValid('25'));    // false
+console.log(ageSchema.isValid(11));      // true
+
+// Тест совершеннолетия
+const ageSchema2 = v.age().isAdult();
+console.log(ageSchema2.isValid(18));     // true
+console.log(ageSchema2.isValid(10));     // false
