@@ -1,0 +1,15 @@
+const v = new Validator();
+
+const schema = v.user().shape({
+  email: v.email().setEmailLengthConstraint(5),
+  age: v.age().isAdult(),
+});
+
+// true: почта "HeyHey" (6 симв > 5), возраст 61 (>= 18)
+console.log(schema.isValid({ email: 'HeyHey@sdsdsd.eu', age: 61 })); 
+
+// false: возраст 17 (< 18)
+console.log(schema.isValid({ email: 'HoiHoiHoi@gmail.com', age: 17 })); 
+
+// false: почта "gege" (4 симв < 5)
+console.log(schema.isValid({ email: 'gege@protonmail.com', age: 82 }));
