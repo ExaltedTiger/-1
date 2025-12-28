@@ -1,0 +1,79 @@
+// Схема для валидации полей объекта пользователя
+class UserSchema {
+  constructor() {
+    this.validators = {};
+  }
+
+  // Принимает объект, где ключи — названия полей, 
+  // а значения — экземпляры схем (EmailSchema, AgeSchema)
+  shape(schemaDefinition) {
+    this.validators = schemaDefinition;
+    return this;
+  }
+
+  isValid(userObject) {
+    // Получаем ключи (названия полей) из описанной схемы
+    const keys = Object.keys(this.validators);
+    
+    // Проверяем каждое поле объекта пользователя
+    // Метод every вернет true, только если все проверки пройдут успешно
+    return keys.every((key) => {
+      const validator = this.validators[key];
+      const value = userObject[key];
+      
+      // Вызываем isValid у соответствующего валидатора для конкретного значения
+      return validator.isValid(value);
+    });
+  }
+}
+
+// Схема для возраста (из задачи 3)
+class AgeSchema {
+  constructor() {
+    this.checkAdult = false;
+  }
+  isAdult() {
+    this.checkAdult = true;
+    return this;
+  }
+  isValid(value) {
+    if (typeof value !== 'number') return false;
+    if (this.checkAdult && value < 18) return false;
+    return true;
+  }
+}
+
+// Схема для email (из задачи 2)
+class EmailSchema {
+  constructor() {
+    this.minLength = null;
+    this.maxLength = null;
+  }
+  setEmailLengthConstraint(min, max) {
+    this.minLength = min;
+    this.maxLength = max;
+    return this;
+  }
+  isValid(value) {
+    if (typeof value !== 'string' || !value.includes('@')) return false;
+    const localPart = value.split('@')[0];
+    if (this.minLength !== null && localPart.length < this.minLength) return false;
+    if (this.maxLength && localPart.length > this.maxLength) return false;
+    return true;
+  }
+}
+
+// Основной класс-фабрика
+class Validator {
+  email() {
+    return new EmailSchema();
+  }
+  age() {
+    return new AgeSchema();
+  }
+  user() {
+    return new UserSchema();
+  }
+}
+
+export default Validator;
