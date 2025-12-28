@@ -1,0 +1,15 @@
+// const Validator = require('./index.js'); // Если CommonJS
+// import Validator from './index.js'; // Если ES Modules
+
+const v = new Validator();
+
+const emailSchema1 = v.email();
+console.log('1:', emailSchema1.isValid('XxXWinnerXxX@gmail.com')); // true
+
+const emailSchema2 = v.email().setEmailLengthConstraint(4);
+console.log('2:', emailSchema2.isValid('Hi!@yahoo.com'));         // false (3 символа < 4)
+console.log('3:', emailSchema2.isValid('Hello!@protonmail.com')); // true (6 символов >= 4)
+
+const emailSchema3 = v.email().setEmailLengthConstraint(2, 4);
+console.log('4:', emailSchema3.isValid('Hello!@protonmail.com')); // false (6 символов > 4)
+console.log('5:', emailSchema3.isValid('Hi!@yahoo.com'));         // true (2 <= 3 <= 4)
