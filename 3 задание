@@ -1,0 +1,65 @@
+// Схема для валидации возраста
+class AgeSchema {
+  constructor() {
+    // По умолчанию проверка на совершеннолетие выключена
+    this.checkAdult = false;
+  }
+
+  // Метод включает проверку на 18+
+  isAdult() {
+    this.checkAdult = true;
+    return this; // Для цепочки вызовов
+  }
+
+  isValid(value) {
+    // 1. Проверка типа данных: должно быть строго число
+    if (typeof value !== 'number') {
+      return false;
+    }
+
+    // 2. Если вызван метод isAdult, проверяем условие >= 18
+    if (this.checkAdult && value < 18) {
+      return false;
+    }
+
+    // В базовом случае (age()) любое число возвращает true
+    return true;
+  }
+}
+
+// Схема для валидации email (из предыдущих задач)
+class EmailSchema {
+  constructor() {
+    this.minLength = null;
+    this.maxLength = null;
+  }
+
+  setEmailLengthConstraint(min, max) {
+    this.minLength = min;
+    this.maxLength = max;
+    return this;
+  }
+
+  isValid(value) {
+    if (typeof value !== 'string' || !value.includes('@')) {
+      return false;
+    }
+    const localPart = value.split('@')[0];
+    if (this.minLength !== null && localPart.length < this.minLength) return false;
+    if (this.maxLength !== undefined && this.maxLength !== null && localPart.length > this.maxLength) return false;
+    return true;
+  }
+}
+
+// Основной класс валидатора
+class Validator {
+  email() {
+    return new EmailSchema();
+  }
+
+  age() {
+    return new AgeSchema();
+  }
+}
+
+export default Validator;
