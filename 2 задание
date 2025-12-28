@@ -1,0 +1,52 @@
+class EmailSchema {
+  constructor() {
+    // Инициализируем ограничения как null (отсутствуют)
+    this.minLength = null;
+    this.maxLength = null;
+  }
+
+  // Метод для установки ограничений длины части до '@'
+  setEmailLengthConstraint(min, max) {
+    this.minLength = min;
+    this.maxLength = max;
+    // Возвращаем this, чтобы можно было чейнить (v.email().setEmailLengthConstraint(...))
+    return this; 
+  }
+
+  isValid(value) {
+    // 1. Базовая проверка: строка
+    if (typeof value !== 'string') {
+      return false;
+    }
+
+    // 2. Базовая проверка: наличие @
+    if (!value.includes('@')) {
+      return false;
+    }
+
+    // 3. Получаем часть email до символа @
+    // split разобьет строку по символу @, берем первый элемент массива (индекс 0)
+    const localPart = value.split('@')[0];
+
+    // 4. Проверка минимальной длины (если она задана)
+    if (this.minLength !== null && localPart.length < this.minLength) {
+      return false;
+    }
+
+    // 5. Проверка максимальной длины (если она задана)
+    // Проверяем на undefined и null, так как второй аргумент необязательный
+    if (this.maxLength !== undefined && this.maxLength !== null && localPart.length > this.maxLength) {
+      return false;
+    }
+
+    return true;
+  }
+}
+
+class Validator {
+  email() {
+    return new EmailSchema();
+  }
+}
+
+export default Validator;
