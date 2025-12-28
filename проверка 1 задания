@@ -1,0 +1,23 @@
+// Класс схемы для валидации email
+class EmailSchema {
+  isValid(value) {
+    // 1. Проверяем, является ли переданное значение строкой
+    if (typeof value !== 'string') {
+      return false;
+    }
+    
+    // 2. Проверяем наличие символа '@' (согласно условию задачи)
+    return value.includes('@');
+  }
+}
+
+// Основной класс валидатора
+class Validator {
+  // Метод создает и возвращает экземпляр схемы для проверки email
+  email() {
+    return new EmailSchema();
+  }
+}
+
+// Экспорт по умолчанию, как требуется в задании
+export default Validator;
